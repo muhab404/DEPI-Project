@@ -42,7 +42,7 @@ jobs:
       - name: Build Nginx Docker image
         run: |
           echo "Building Nginx image with the proxy configuration"
-          docker build -t nginx-app -f nginx.Dockerfile
+          docker build -t nginx-app -f nginx.Dockerfile .
 
       # Step 6: Run docker-compose to test locally
       - name: Test Docker Compose
