@@ -33,24 +33,30 @@ jobs:
           pip install --upgrade pip
           pip install Flask
 
-      # Step 4: Build Flask app Docker image
+      # Step 4: Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      # Step 5: Build Flask app Docker image
       - name: Build Flask app Docker image
         run: |
           docker build -t flaskapp:v1 -f Dockerfile .
 
-      # Step 5: Build Nginx Docker image
+      # Step 6: Build Nginx Docker image
       - name: Build Nginx Docker image
         run: |
           echo "Building Nginx image with the proxy configuration"
           docker build -t nginx-app -f nginx.Dockerfile .
 
-      # Step 6: Run docker-compose to test locally
+      # Step 7: Run docker-compose to test locally
       - name: Test Docker Compose
         run: |
           docker-compose up -d
           sleep 5
           curl http://localhost | grep "Hello, DevOps World!"
-
   deploy:
     runs-on: ubuntu-latest
     needs: build
