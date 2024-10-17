@@ -58,16 +58,8 @@ jobs:
           docker-compose up -d
           sleep 5
           curl http://localhost | grep "Hello, DevOps World!"
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
 
-    steps:
-      # Step 1: Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Step 2: Configure AWS credentials
+      # Step 8: Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -75,18 +67,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Step 3: Log in to Amazon ECR
+      # Step 9: Log in to Amazon ECR
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Step 4: Push Flask app Docker image to ECR
+      # Step 10: Push Flask app Docker image to ECR
       - name: Push Flask app to ECR
         run: |
           docker tag flaskapp:v1 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/flaskapp:v1
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/flaskapp:v1
 
-      # Step 5: Push Nginx Docker image to ECR
+      # Step 11: Push Nginx Docker image to ECR
       - name: Push Nginx app to ECR
         run: |
           docker tag nginx-app:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nginx-app:latest
